@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+
+  db:
+    restart: always
+    image: postgres:14
+
+    volumes:
+    - ./.database/postgres/data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=qwerty
+    ports:
+      - 5432:5432
+     
+
+  astro:
+    build: ./
+    command: ./astro
+    volumes:
+      - ./.pictures:/go/pictures/
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    environment:
+      - TOKEN=HPlhQWT8ri9yfZuAkZVh4ZEaUTCoBJbZcMynsHdP
+      - ASTRO_URL=https://api.nasa.gov/planetary/apod
+
+      - HOST=http://127.0.0.1
+      - PORT=8000
+
+      - DB_PASSWORD=qwerty
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_NAME=postgres
+      - DB_SSLMODE=disable
